@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>sb-security-fortress // Build Tracker</title>
+<title>sb-security-fortress</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
 
@@ -484,22 +484,63 @@
 </div>
 
 <script>
+// ============================================================
+// STATUS CONFIGURATION — EDIT HERE ONLY
+// Values: "todo" | "inprogress" | "done" | "revisit"
+// ============================================================
+const STATUS = {
+  // Phase 1 — Core Infrastructure
+  "1-1": "todo",   // VMware Workstation Pro Setup
+  "1-2": "todo",   // Network Design
+  "1-3": "todo",   // Windows Server 2019/2022 VM
+  "1-4": "todo",   // Active Directory Domain Services
+  "1-5": "todo",   // DHCP Server
+  "1-6": "todo",   // Windows 10/11 Client VM
+
+  // Phase 2 — IAM & Group Policy
+  "2-1": "todo",   // User Lifecycle Management
+  "2-2": "todo",   // Role-Based Access Control
+  "2-3": "todo",   // Group Policy Objects
+  "2-4": "todo",   // Privileged Access
+  "2-5": "todo",   // File Server and Permissions
+
+  // Phase 3 — Visibility & Detection
+  "3-1": "todo",   // Audit Policy & Windows Event Logging
+  "3-2": "todo",   // Syslog / Log Forwarding
+  "3-3": "todo",   // SIEM Deployment (Wazuh)
+  "3-4": "todo",   // Detection Rule Writing
+  "3-5": "todo",   // Simulate and Detect
+
+  // Phase 4 — Vulnerability & Risk
+  "4-1": "todo",   // Vulnerability Scanning
+  "4-2": "todo",   // Finding Prioritization
+  "4-3": "todo",   // Risk Register
+  "4-4": "todo",   // Framework Mapping
+
+  // Phase 5 — Hardening
+  "5-1": "todo",   // CIS Benchmark Hardening
+  "5-2": "todo",   // Network Hardening
+  "5-3": "todo",   // Service and Port Hardening
+  "5-4": "todo",   // Remediation Verification
+};
+// ============================================================
+
 const phases = [
   {
     id: 1, title: "Core Infrastructure", subtitle: "Build the foundation everything else runs on",
     color: "#00C2FF", accent: "#003A4D", duration: "2–4 weeks", icon: "⬡",
     steps: [
-      { id: "1-1", title: "VMware Workstation Pro Setup", status: "todo", docs: "Network topology, VM allocation table",
+      { id: "1-1", title: "VMware Workstation Pro Setup", docs: "Network topology, VM allocation table",
         details: ["Install VMware Workstation Pro on host machine","Plan VM allocation: RAM, disk, CPU budgets","Create Host-Only and NAT virtual networks in VMware Network Editor","Document host machine specs in your repo under /docs/infra/host.md"] },
-      { id: "1-2", title: "Network Design", status: "todo", docs: "Network diagram, IP address scheme doc",
+      { id: "1-2", title: "Network Design", docs: "Network diagram, IP address scheme doc",
         details: ["Define subnet scheme: e.g. 10.0.1.0/24 for servers, 10.0.2.0/24 for clients","Plan VLAN-equivalent segments using VMware virtual switches","Draw a logical network diagram (draw.io)","Document IP assignments: static vs DHCP"] },
-      { id: "1-3", title: "Windows Server 2019/2022 VM", status: "todo", docs: "Server build sheet: specs, OS version, patch level",
+      { id: "1-3", title: "Windows Server 2019/2022 VM", docs: "Server build sheet: specs, OS version, patch level",
         details: ["Install Windows Server — use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
-      { id: "1-4", title: "Active Directory Domain Services", status: "todo", docs: "OU structure diagram, domain design decisions",
+      { id: "1-4", title: "Active Directory Domain Services", docs: "OU structure diagram, domain design decisions",
         details: ["Promote server to Domain Controller","Create domain: hargrove.local","Configure DNS (installed with AD DS)","Create OU structure: Users, Computers, Groups, Service Accounts","Create test user accounts across different roles"] },
-      { id: "1-5", title: "DHCP Server", status: "todo", docs: "DHCP scope config, exclusions, reservations",
+      { id: "1-5", title: "DHCP Server", docs: "DHCP scope config, exclusions, reservations",
         details: ["Install DHCP role on Windows Server","Configure scope for client subnet","Set DNS and gateway options in scope","Test with a Windows 10/11 client VM"] },
-      { id: "1-6", title: "Windows 10/11 Client VM", status: "todo", docs: "Client build sheet",
+      { id: "1-6", title: "Windows 10/11 Client VM", docs: "Client build sheet",
         details: ["Install Windows 10 or 11 client","Join to domain","Log in with a domain user account","Confirm DNS resolution and DHCP lease"] },
     ]
   },
@@ -507,15 +548,15 @@ const phases = [
     id: 2, title: "IAM & Group Policy", subtitle: "Who can access what, and how is it enforced",
     color: "#A78BFA", accent: "#2D1F4D", duration: "2–3 weeks", icon: "◈",
     steps: [
-      { id: "2-1", title: "User Lifecycle Management", status: "todo", docs: "User lifecycle SOP, account naming convention doc",
+      { id: "2-1", title: "User Lifecycle Management", docs: "User lifecycle SOP, account naming convention doc",
         details: ["Create onboarding and offboarding procedures as a written doc","Practice: provision a new user, assign to groups, set expiry","Practice: disable and deprovision a departed user","Document account states: active, disabled, locked"] },
-      { id: "2-2", title: "Role-Based Access Control", status: "todo", docs: "RBAC matrix, group structure diagram",
+      { id: "2-2", title: "Role-Based Access Control", docs: "RBAC matrix, group structure diagram",
         details: ["Create security groups mapped to job roles","Assign file share permissions to groups, not individual users","Test: log in as different users, verify access is correct","Document RBAC matrix: role → group → permissions"] },
-      { id: "2-3", title: "Group Policy Objects", status: "todo", docs: "GPO inventory, each GPO's purpose and target OU",
+      { id: "2-3", title: "Group Policy Objects", docs: "GPO inventory, each GPO's purpose and target OU",
         details: ["Create baseline security GPO: password policy, lockout policy","Deploy a desktop restriction GPO to a test OU","Configure audit policy via GPO (logon events, privilege use, object access)","Test GPO application with gpresult /r on client"] },
-      { id: "2-4", title: "Privileged Access", status: "todo", docs: "Privileged account inventory, service account register",
+      { id: "2-4", title: "Privileged Access", docs: "Privileged account inventory, service account register",
         details: ["Identify all privileged accounts: Domain Admin, local admin, service accounts","Create a break-glass admin account separate from daily use","Document service accounts, their purpose, and what they have access to","Practice principle of least privilege: reduce permissions, test nothing breaks"] },
-      { id: "2-5", title: "File Server and Permissions", status: "todo", docs: "File share permission matrix",
+      { id: "2-5", title: "File Server and Permissions", docs: "File share permission matrix",
         details: ["Create shared folders mapped to departments/roles","Apply NTFS permissions using security groups","Enable access-based enumeration so users only see what they can access","Test access as multiple users, document results"] },
     ]
   },
@@ -523,15 +564,15 @@ const phases = [
     id: 3, title: "Visibility & Detection", subtitle: "Build eyes across your environment",
     color: "#34D399", accent: "#0D2B1F", duration: "3–4 weeks", icon: "◉",
     steps: [
-      { id: "3-1", title: "Audit Policy & Windows Event Logging", status: "todo", docs: "Audit policy baseline, key event ID reference sheet",
+      { id: "3-1", title: "Audit Policy & Windows Event Logging", docs: "Audit policy baseline, key event ID reference sheet",
         details: ["Configure advanced audit policy via GPO","Key event IDs: 4624/4625 (logon), 4720 (user created), 4732 (group membership), 4688 (process creation)","Verify logs appearing in Event Viewer on endpoints","Document which policies are enabled and why"] },
-      { id: "3-2", title: "Syslog / Log Forwarding", status: "todo", docs: "Log architecture diagram, forwarding config",
+      { id: "3-2", title: "Syslog / Log Forwarding", docs: "Log architecture diagram, forwarding config",
         details: ["Set up a Linux VM (Ubuntu Server) as your log collector","Configure Windows Event Forwarding (WEF) or install a log agent","Forward logs from Domain Controller and client to collector","Verify logs arriving at collector"] },
-      { id: "3-3", title: "SIEM Deployment (Wazuh)", status: "todo", docs: "Wazuh deployment doc, agent enrollment steps",
+      { id: "3-3", title: "SIEM Deployment (Wazuh)", docs: "Wazuh deployment doc, agent enrollment steps",
         details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules — understand what fires by default"] },
-      { id: "3-4", title: "Detection Rule Writing", status: "todo", docs: "Detection rule register with rationale",
+      { id: "3-4", title: "Detection Rule Writing", docs: "Detection rule register with rationale",
         details: ["Write a rule to alert on 5+ failed logins in 60 seconds","Write a rule to alert when a new user is added to Domain Admins","Write a rule for logon outside business hours","Document each rule: what it detects, why it matters, false positive risk"] },
-      { id: "3-5", title: "Simulate and Detect", status: "todo", docs: "Simulation runbooks, detection gap analysis",
+      { id: "3-5", title: "Simulate and Detect", docs: "Simulation runbooks, detection gap analysis",
         details: ["Simulate a brute force: run bad logins against a user account","Simulate privilege escalation: add a user to Domain Admins","Simulate recon: run net user /domain, net group /domain","Document: did your rules fire? What did you miss? What tuning is needed?"] },
     ]
   },
@@ -539,13 +580,13 @@ const phases = [
     id: 4, title: "Vulnerability & Risk", subtitle: "Find what's exposed before an attacker does",
     color: "#FB923C", accent: "#3D1A00", duration: "2–3 weeks", icon: "◬",
     steps: [
-      { id: "4-1", title: "Vulnerability Scanning", status: "todo", docs: "Scan methodology doc, raw findings report",
+      { id: "4-1", title: "Vulnerability Scanning", docs: "Scan methodology doc, raw findings report",
         details: ["Deploy OpenVAS or Nessus Essentials on a dedicated VM","Run an unauthenticated scan against your server subnet","Run an authenticated scan using a service account","Export findings report"] },
-      { id: "4-2", title: "Finding Prioritization", status: "todo", docs: "Prioritized findings log, false positive register",
+      { id: "4-2", title: "Finding Prioritization", docs: "Prioritized findings log, false positive register",
         details: ["Triage findings by CVSS score and exploitability","Identify which findings are critical in your specific environment","Mark false positives and document why","Create a prioritized remediation list"] },
-      { id: "4-3", title: "Risk Register", status: "todo", docs: "Risk register (spreadsheet or markdown table)",
+      { id: "4-3", title: "Risk Register", docs: "Risk register (spreadsheet or markdown table)",
         details: ["Identify key assets: DC, file server, client workstations","Map threats to each asset","Score likelihood and impact (1–5 scale)","Document existing controls and residual risk"] },
-      { id: "4-4", title: "Framework Mapping", status: "todo", docs: "CIS Controls gap analysis, compliance mapping",
+      { id: "4-4", title: "Framework Mapping", docs: "CIS Controls gap analysis, compliance mapping",
         details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps — what IG1 controls do you not have","Document as a gap analysis"] },
     ]
   },
@@ -553,13 +594,13 @@ const phases = [
     id: 5, title: "Hardening", subtitle: "Close the gaps you found, then prove it",
     color: "#F472B6", accent: "#3D0020", duration: "2–3 weeks", icon: "⬠",
     steps: [
-      { id: "5-1", title: "CIS Benchmark Hardening", status: "todo", docs: "Hardening checklist with before/after state",
+      { id: "5-1", title: "CIS Benchmark Hardening", docs: "Hardening checklist with before/after state",
         details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying — document issues","Re-run vulnerability scan to measure improvement"] },
-      { id: "5-2", title: "Network Hardening", status: "todo", docs: "Firewall rule baseline, segmentation rationale",
+      { id: "5-2", title: "Network Hardening", docs: "Firewall rule baseline, segmentation rationale",
         details: ["Review firewall rules — remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
-      { id: "5-3", title: "Service and Port Hardening", status: "todo", docs: "Port/service baseline, before/after scan results",
+      { id: "5-3", title: "Service and Port Hardening", docs: "Port/service baseline, before/after scan results",
         details: ["Run a port scan against your servers (nmap from Kali VM)","Disable any services not required for the server's role","Document open ports and justify each one","Re-scan after changes to confirm ports closed"] },
-      { id: "5-4", title: "Remediation Verification", status: "todo", docs: "Remediation report, risk acceptance register",
+      { id: "5-4", title: "Remediation Verification", docs: "Remediation report, risk acceptance register",
         details: ["Re-run vulnerability scanner after hardening","Compare new report to original — document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
     ]
   }
@@ -574,9 +615,9 @@ const statusConfig = {
 
 const statusOrder = ["todo","inprogress","done","revisit"];
 
-// Seed in-memory state from step data
+// Seed in-memory state from STATUS config
 const statuses = {};
-phases.forEach(p => p.steps.forEach(s => statuses[s.id] = s.status || "todo"));
+phases.forEach(p => p.steps.forEach(s => statuses[s.id] = STATUS[s.id] || "todo"));
 
 let activePhase = 1;
 const expandedSteps = new Set();
