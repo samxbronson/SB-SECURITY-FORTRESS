@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sb-security-fortress // Build Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080B10;
+    --surface: #0D1117;
+    --border: #1A2030;
+    --border-bright: #252D3D;
+    --text: #E2E8F0;
+    --muted: #4B5563;
+    --dim: #64748B;
+    --p1: #00C2FF;
+    --p2: #A78BFA;
+    --p3: #34D399;
+    --p4: #FB923C;
+    --p5: #F472B6;
+    --status-todo: #4B5563;
+    --status-inprogress: #FBBF24;
+    --status-done: #34D399;
+    --status-revisit: #F87171;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── HEADER ── */
+  #header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 20px;
+    background: linear-gradient(180deg, #0D1117 0%, var(--bg) 100%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .header-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F8FAFC;
+    letter-spacing: -0.02em;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .header-progress-num {
+    font-size: 38px;
+    font-weight: 700;
+    color: #F8FAFC;
+    line-height: 1;
+    font-family: 'Space Grotesk', sans-serif;
+    text-align: right;
+  }
+
+  .header-progress-num span { font-size: 18px; color: var(--muted); }
+
+  .header-progress-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  .progress-bar-outer {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--p1), var(--p2), var(--p3));
+    transition: width 0.5s ease;
+  }
+
+  /* ── LAYOUT ── */
+  #app { display: flex; min-height: calc(100vh - 110px); }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 240px;
+    min-width: 240px;
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    background: var(--bg);
+    position: sticky;
+    top: 110px;
+    height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  .phase-nav-item {
+    padding: 14px 20px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+  }
+
+  .phase-nav-item:hover { background: rgba(255,255,255,0.02); }
+  .phase-nav-item.active { background: rgba(255,255,255,0.04); }
+
+  .phase-nav-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .phase-icon { font-size: 15px; }
+
+  .phase-nav-number {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .phase-nav-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dim);
+    line-height: 1.3;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .phase-nav-item.active .phase-nav-title { color: #F8FAFC; }
+
+  .phase-mini-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .phase-mini-bar-track {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .phase-mini-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 0.4s ease;
+  }
+
+  .phase-mini-pct {
+    font-size: 9px;
+    color: var(--muted);
+    min-width: 24px;
+    text-align: right;
+  }
+
+  .phase-nav-duration {
+    font-size: 9px;
+    color: #374151;
+    margin-top: 4px;
+  }
+
+  /* Legend */
+  .sidebar-legend {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+
+  .legend-title {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-label { font-size: 10px; color: var(--dim); }
+
+  /* ── MAIN ── */
+  #main {
+    flex: 1;
+    padding: 28px 36px;
+    overflow-y: auto;
+  }
+
+  .phase-header { margin-bottom: 28px; }
+
+  .phase-header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .phase-header-icon { font-size: 24px; }
+
+  .phase-header-meta {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .phase-header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F8FAFC;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .phase-header-sub {
+    font-size: 12px;
+    color: var(--dim);
+    padding-left: 36px;
+  }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+
+  .step-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .step-card.expanded { background: #0D1117; }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .step-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-title-block { flex: 1; min-width: 0; }
+
+  .step-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #E2E8F0;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .step-meta {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .status-badge:hover { filter: brightness(1.2); }
+
+  .chevron {
+    color: #374151;
+    font-size: 10px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .chevron.open { transform: rotate(180deg); }
+
+  /* Expanded content */
+  .step-body {
+    padding: 0 18px 18px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: none;
+  }
+
+  .step-body.visible { display: block; }
+
+  .step-body-inner {
+    padding-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .step-body-inner { grid-template-columns: 1fr; }
+    #sidebar { display: none; }
+    #main { padding: 16px; }
+    #header { padding: 16px; }
+  }
+
+  .tasks-label, .doc-label {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .task-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .task-arrow {
+    font-size: 12px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .task-text {
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.5;
+  }
+
+  .doc-box {
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="header-top">
+    <div>
+      <div class="header-label">sb-security-fortress // VMware Workstation Pro</div>
+      <div class="header-title">Infrastructure Build Tracker</div>
+      <div class="header-sub">IT Infrastructure → IAM → Detection → Risk → Hardening</div>
+    </div>
+    <div>
+      <div class="header-progress-num" id="overall-pct">0<span>%</span></div>
+      <div class="header-progress-label" id="overall-label">0 of 0 steps complete</div>
+    </div>
+  </div>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="overall-bar" style="width:0%"></div>
+  </div>
+</div>
+
+  <!-- Context Banner -->
+  <div style="background:#0D1117; border-bottom:1px solid #1A2030; padding:14px 40px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+    <div style="display:flex; align-items:center; gap:28px; flex-wrap:wrap;">
+      <div>
+        <div style="font-size:9px; color:#4B5563; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:3px;">Simulated Client</div>
+        <div style="font-size:12px; font-weight:600; color:#94A3B8; font-family:'Space Grotesk',sans-serif;">Hargrove Financial Group</div>
+        <div style="font-size:10px; color:#374151; margin-top:1px;">45-person accounting firm · On-premise Windows · No dedicated security team</div>
+      </div>
+      <div style="width:1px; height:32px; background:#1A2030; flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:9px; color:#4B5563; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:3px;">Compliance Scope</div>
+        <div style="display:flex; gap:6px; margin-top:2px;">
+          <span style="padding:2px 8px; border-radius:3px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.25); font-size:9px; color:#FBBF24; letter-spacing:0.1em; text-transform:uppercase;">PCI-DSS</span>
+          <span style="padding:2px 8px; border-radius:3px; background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.25); font-size:9px; color:#A78BFA; letter-spacing:0.1em; text-transform:uppercase;">SOC 2 Type II</span>
+        </div>
+      </div>
+      <div style="width:1px; height:32px; background:#1A2030; flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:9px; color:#4B5563; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:3px;">Engagement Context</div>
+        <div style="font-size:10px; color:#374151; max-width:320px; line-height:1.5;">Solo consultant engaged to assess, document, and improve security posture ahead of SOC 2 audit.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <span style="padding:3px 10px; border-radius:3px; background:rgba(0,194,255,0.08); border:1px solid rgba(0,194,255,0.2); font-size:9px; color:#00C2FF; letter-spacing:0.1em; text-transform:uppercase;">Infrastructure</span>
+      <span style="padding:3px 10px; border-radius:3px; background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.2); font-size:9px; color:#34D399; letter-spacing:0.1em; text-transform:uppercase;">SOC</span>
+      <span style="padding:3px 10px; border-radius:3px; background:rgba(251,146,60,0.08); border:1px solid rgba(251,146,60,0.2); font-size:9px; color:#FB923C; letter-spacing:0.1em; text-transform:uppercase;">GRC</span>
+      <span style="padding:3px 10px; border-radius:3px; background:rgba(244,114,182,0.08); border:1px solid rgba(244,114,182,0.2); font-size:9px; color:#F472B6; letter-spacing:0.1em; text-transform:uppercase;">Consulting</span>
+    </div>
+  </div>
+
+<div id="app">
+  <div id="sidebar">
+    <div id="phase-nav"></div>
+    <div class="sidebar-legend">
+      <div class="legend-title">Status Key</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4B5563"></div><span class="legend-label">Planned</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FBBF24"></div><span class="legend-label">In Progress</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34D399"></div><span class="legend-label">Complete</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F87171"></div><span class="legend-label">Needs Revisit</span></div>
+    </div>
+  </div>
+  <div id="main"></div>
+</div>
+
+<script>
+const phases = [
+  {
+    id: 1, title: "Core Infrastructure", subtitle: "Build the foundation everything else runs on",
+    color: "#00C2FF", accent: "#003A4D", duration: "2–4 weeks", icon: "⬡",
+    steps: [
+      { id: "1-1", title: "VMware Workstation Pro Setup", status: "todo", docs: "Network topology, VM allocation table",
+        details: ["Install VMware Workstation Pro on host machine","Plan VM allocation: RAM, disk, CPU budgets","Create Host-Only and NAT virtual networks in VMware Network Editor","Document host machine specs in your repo under /docs/infra/host.md"] },
+      { id: "1-2", title: "Network Design", status: "todo", docs: "Network diagram, IP address scheme doc",
+        details: ["Define subnet scheme: e.g. 10.0.1.0/24 for servers, 10.0.2.0/24 for clients","Plan VLAN-equivalent segments using VMware virtual switches","Draw a logical network diagram (draw.io)","Document IP assignments: static vs DHCP"] },
+      { id: "1-3", title: "Windows Server 2019/2022 VM", status: "todo", docs: "Server build sheet: specs, OS version, patch level",
+        details: ["Install Windows Server — use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
+      { id: "1-4", title: "Active Directory Domain Services", status: "todo", docs: "OU structure diagram, domain design decisions",
+        details: ["Promote server to Domain Controller","Create domain: hargrove.local","Configure DNS (installed with AD DS)","Create OU structure: Users, Computers, Groups, Service Accounts","Create test user accounts across different roles"] },
+      { id: "1-5", title: "DHCP Server", status: "todo", docs: "DHCP scope config, exclusions, reservations",
+        details: ["Install DHCP role on Windows Server","Configure scope for client subnet","Set DNS and gateway options in scope","Test with a Windows 10/11 client VM"] },
+      { id: "1-6", title: "Windows 10/11 Client VM", status: "todo", docs: "Client build sheet",
+        details: ["Install Windows 10 or 11 client","Join to domain","Log in with a domain user account","Confirm DNS resolution and DHCP lease"] },
+    ]
+  },
+  {
+    id: 2, title: "IAM & Group Policy", subtitle: "Who can access what, and how is it enforced",
+    color: "#A78BFA", accent: "#2D1F4D", duration: "2–3 weeks", icon: "◈",
+    steps: [
+      { id: "2-1", title: "User Lifecycle Management", status: "todo", docs: "User lifecycle SOP, account naming convention doc",
+        details: ["Create onboarding and offboarding procedures as a written doc","Practice: provision a new user, assign to groups, set expiry","Practice: disable and deprovision a departed user","Document account states: active, disabled, locked"] },
+      { id: "2-2", title: "Role-Based Access Control", status: "todo", docs: "RBAC matrix, group structure diagram",
+        details: ["Create security groups mapped to job roles","Assign file share permissions to groups, not individual users","Test: log in as different users, verify access is correct","Document RBAC matrix: role → group → permissions"] },
+      { id: "2-3", title: "Group Policy Objects", status: "todo", docs: "GPO inventory, each GPO's purpose and target OU",
+        details: ["Create baseline security GPO: password policy, lockout policy","Deploy a desktop restriction GPO to a test OU","Configure audit policy via GPO (logon events, privilege use, object access)","Test GPO application with gpresult /r on client"] },
+      { id: "2-4", title: "Privileged Access", status: "todo", docs: "Privileged account inventory, service account register",
+        details: ["Identify all privileged accounts: Domain Admin, local admin, service accounts","Create a break-glass admin account separate from daily use","Document service accounts, their purpose, and what they have access to","Practice principle of least privilege: reduce permissions, test nothing breaks"] },
+      { id: "2-5", title: "File Server and Permissions", status: "todo", docs: "File share permission matrix",
+        details: ["Create shared folders mapped to departments/roles","Apply NTFS permissions using security groups","Enable access-based enumeration so users only see what they can access","Test access as multiple users, document results"] },
+    ]
+  },
+  {
+    id: 3, title: "Visibility & Detection", subtitle: "Build eyes across your environment",
+    color: "#34D399", accent: "#0D2B1F", duration: "3–4 weeks", icon: "◉",
+    steps: [
+      { id: "3-1", title: "Audit Policy & Windows Event Logging", status: "todo", docs: "Audit policy baseline, key event ID reference sheet",
+        details: ["Configure advanced audit policy via GPO","Key event IDs: 4624/4625 (logon), 4720 (user created), 4732 (group membership), 4688 (process creation)","Verify logs appearing in Event Viewer on endpoints","Document which policies are enabled and why"] },
+      { id: "3-2", title: "Syslog / Log Forwarding", status: "todo", docs: "Log architecture diagram, forwarding config",
+        details: ["Set up a Linux VM (Ubuntu Server) as your log collector","Configure Windows Event Forwarding (WEF) or install a log agent","Forward logs from Domain Controller and client to collector","Verify logs arriving at collector"] },
+      { id: "3-3", title: "SIEM Deployment (Wazuh)", status: "todo", docs: "Wazuh deployment doc, agent enrollment steps",
+        details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules — understand what fires by default"] },
+      { id: "3-4", title: "Detection Rule Writing", status: "todo", docs: "Detection rule register with rationale",
+        details: ["Write a rule to alert on 5+ failed logins in 60 seconds","Write a rule to alert when a new user is added to Domain Admins","Write a rule for logon outside business hours","Document each rule: what it detects, why it matters, false positive risk"] },
+      { id: "3-5", title: "Simulate and Detect", status: "todo", docs: "Simulation runbooks, detection gap analysis",
+        details: ["Simulate a brute force: run bad logins against a user account","Simulate privilege escalation: add a user to Domain Admins","Simulate recon: run net user /domain, net group /domain","Document: did your rules fire? What did you miss? What tuning is needed?"] },
+    ]
+  },
+  {
+    id: 4, title: "Vulnerability & Risk", subtitle: "Find what's exposed before an attacker does",
+    color: "#FB923C", accent: "#3D1A00", duration: "2–3 weeks", icon: "◬",
+    steps: [
+      { id: "4-1", title: "Vulnerability Scanning", status: "todo", docs: "Scan methodology doc, raw findings report",
+        details: ["Deploy OpenVAS or Nessus Essentials on a dedicated VM","Run an unauthenticated scan against your server subnet","Run an authenticated scan using a service account","Export findings report"] },
+      { id: "4-2", title: "Finding Prioritization", status: "todo", docs: "Prioritized findings log, false positive register",
+        details: ["Triage findings by CVSS score and exploitability","Identify which findings are critical in your specific environment","Mark false positives and document why","Create a prioritized remediation list"] },
+      { id: "4-3", title: "Risk Register", status: "todo", docs: "Risk register (spreadsheet or markdown table)",
+        details: ["Identify key assets: DC, file server, client workstations","Map threats to each asset","Score likelihood and impact (1–5 scale)","Document existing controls and residual risk"] },
+      { id: "4-4", title: "Framework Mapping", status: "todo", docs: "CIS Controls gap analysis, compliance mapping",
+        details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps — what IG1 controls do you not have","Document as a gap analysis"] },
+    ]
+  },
+  {
+    id: 5, title: "Hardening", subtitle: "Close the gaps you found, then prove it",
+    color: "#F472B6", accent: "#3D0020", duration: "2–3 weeks", icon: "⬠",
+    steps: [
+      { id: "5-1", title: "CIS Benchmark Hardening", status: "todo", docs: "Hardening checklist with before/after state",
+        details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying — document issues","Re-run vulnerability scan to measure improvement"] },
+      { id: "5-2", title: "Network Hardening", status: "todo", docs: "Firewall rule baseline, segmentation rationale",
+        details: ["Review firewall rules — remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
+      { id: "5-3", title: "Service and Port Hardening", status: "todo", docs: "Port/service baseline, before/after scan results",
+        details: ["Run a port scan against your servers (nmap from Kali VM)","Disable any services not required for the server's role","Document open ports and justify each one","Re-scan after changes to confirm ports closed"] },
+      { id: "5-4", title: "Remediation Verification", status: "todo", docs: "Remediation report, risk acceptance register",
+        details: ["Re-run vulnerability scanner after hardening","Compare new report to original — document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
+    ]
+  }
+];
+
+const statusConfig = {
+  todo:       { label: "Planned",       color: "#4B5563", bg: "rgba(75,85,99,0.15)"    },
+  inprogress: { label: "In Progress",   color: "#FBBF24", bg: "rgba(251,191,36,0.15)" },
+  done:       { label: "Complete",      color: "#34D399", bg: "rgba(52,211,153,0.15)" },
+  revisit:    { label: "Needs Revisit", color: "#F87171", bg: "rgba(248,113,113,0.15)"},
+};
+
+const statusOrder = ["todo","inprogress","done","revisit"];
+
+// Seed in-memory state from step data
+const statuses = {};
+phases.forEach(p => p.steps.forEach(s => statuses[s.id] = s.status || "todo"));
+
+let activePhase = 1;
+const expandedSteps = new Set();
+
+function totalSteps() { return phases.reduce((a,p) => a + p.steps.length, 0); }
+function totalDone()  { return Object.values(statuses).filter(s => s === "done").length; }
+function phaseDone(phase) { return phase.steps.filter(s => statuses[s.id] === "done").length; }
+function phasePct(phase)  { return Math.round((phaseDone(phase) / phase.steps.length) * 100); }
+
+function toggleStep(id) {
+  if (expandedSteps.has(id)) expandedSteps.delete(id);
+  else expandedSteps.add(id);
+  render();
+}
+
+function setPhase(id) {
+  activePhase = id;
+  render();
+}
+
+function render() {
+  const done = totalDone();
+  const total = totalSteps();
+  const pct = Math.round((done / total) * 100);
+
+  document.getElementById('overall-pct').innerHTML = `${pct}<span>%</span>`;
+  document.getElementById('overall-label').textContent = `${done} of ${total} steps complete`;
+  document.getElementById('overall-bar').style.width = `${pct}%`;
+
+  // Sidebar nav
+  const nav = document.getElementById('phase-nav');
+  nav.innerHTML = phases.map(p => {
+    const pp = phasePct(p);
+    const isActive = p.id === activePhase;
+    return `
+      <div class="phase-nav-item ${isActive ? 'active' : ''}"
+           style="border-left-color: ${isActive ? p.color : 'transparent'}"
+           onclick="setPhase(${p.id})">
+        <div class="phase-nav-top">
+          <span class="phase-icon" style="color:${p.color}">${p.icon}</span>
+          <div>
+            <div class="phase-nav-number">Phase ${p.id}</div>
+            <div class="phase-nav-title">${p.title}</div>
+          </div>
+        </div>
+        <div class="phase-mini-bar">
+          <div class="phase-mini-bar-track">
+            <div class="phase-mini-bar-fill" style="width:${pp}%; background:${p.color}"></div>
+          </div>
+          <span class="phase-mini-pct">${pp}%</span>
+        </div>
+        <div class="phase-nav-duration">${p.duration}</div>
+      </div>`;
+  }).join('');
+
+  // Main content
+  const phase = phases.find(p => p.id === activePhase);
+  const main = document.getElementById('main');
+
+  main.innerHTML = `
+    <div class="phase-header">
+      <div class="phase-header-top">
+        <span class="phase-header-icon" style="color:${phase.color}">${phase.icon}</span>
+        <div>
+          <div class="phase-header-meta">Phase ${phase.id} · ${phase.duration}</div>
+          <div class="phase-header-title">${phase.title}</div>
+        </div>
+      </div>
+      <div class="phase-header-sub">${phase.subtitle}</div>
+    </div>
+    <div class="steps">
+      ${phase.steps.map((step, i) => {
+        const status = statuses[step.id];
+        const sc = statusConfig[status];
+        const isExpanded = expandedSteps.has(step.id);
+        return `
+          <div class="step-card ${isExpanded ? 'expanded' : ''}"
+               style="border-color: ${isExpanded ? phase.color + '50' : '#1A2030'}; background: ${isExpanded ? phase.accent + '25' : '#0D1117'}">
+            <div class="step-header" onclick="toggleStep('${step.id}')">
+              <div class="step-number" style="border-color:${phase.color}30; color:${phase.color}">${i+1}</div>
+              <div class="step-title-block">
+                <div class="step-title">${step.title}</div>
+                <div class="step-meta">${step.details.length} tasks · ${step.docs}</div>
+              </div>
+              <div class="status-badge"
+                   style="background:${sc.bg}; border-color:${sc.color}40; color:${sc.color}; cursor:default;">
+                ${sc.label}
+              </div>
+              <div class="chevron ${isExpanded ? 'open' : ''}">▼</div>
+            </div>
+            <div class="step-body ${isExpanded ? 'visible' : ''}">
+              <div class="step-body-inner">
+                <div>
+                  <div class="tasks-label">Tasks</div>
+                  ${step.details.map(d => `
+                    <div class="task-item">
+                      <span class="task-arrow" style="color:${phase.color}">›</span>
+                      <span class="task-text">${d}</span>
+                    </div>`).join('')}
+                </div>
+                <div>
+                  <div class="doc-label">Document</div>
+                  <div class="doc-box" style="background:${phase.color}10; border:1px solid ${phase.color}30; color:${phase.color}">
+                    📄 ${step.docs}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
