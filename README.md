@@ -3,6 +3,26 @@
 
 Build and document a business-grade IT and security infrastructure in a VMware Workstation homelab environment. Develop analyst skills across infrastructure, GRC, and SOC disciplines. Every build decision, configuration, and finding is documented as if it were a client deliverable — supporting the development of a solo security consulting practice.
 
+## Repo Structure
+
+```
+/
+├── README.md                  ← This file. Project direction and checklist.
+├── index.html                 ← Project roadmap webpage
+├── docs/
+│   ├── network/               ← Network diagrams, topology, IP scheme
+│   ├── systems/               ← VM build sheets, OS configs, audit policies
+│   ├── iam/                   ← OU structure, GPOs, privileged accounts, service accounts
+│   └── grc/                   ← Risk register, compliance mapping, policies
+├── phases/
+│   ├── phase1-infrastructure/ ← Build notes, decisions, AD design
+│   ├── phase2-detection/      ← SIEM setup, detection engineering notes
+│   └── phase3-risk-hardening/ ← Vuln reports, hardening logs, client artifacts
+├── playbooks/                 ← SOC playbooks, IR procedures, triage guides
+├── scripts/                   ← PowerShell, automation, tooling used in lab
+└── assets/                    ← Diagrams, screenshots, supporting images
+```
+
 ---
 
 ## Mock Enterprise — Hargrove Financial Group
@@ -37,26 +57,6 @@ Because they process client payment data and manage sensitive financial records,
 - Produce consulting-ready artifacts throughout the process
 
 ---
-
-## Repo Structure
-
-```
-/
-├── README.md                  ← This file. Project direction and checklist.
-├── index.html                 ← Project roadmap webpage
-├── docs/
-│   ├── network/               ← Network diagrams, topology, IP scheme
-│   ├── systems/               ← VM build sheets, OS configs, audit policies
-│   ├── iam/                   ← OU structure, GPOs, privileged accounts, service accounts
-│   └── grc/                   ← Risk register, compliance mapping, policies
-├── phases/
-│   ├── phase1-infrastructure/ ← Build notes, decisions, AD design
-│   ├── phase2-detection/      ← SIEM setup, detection engineering notes
-│   └── phase3-risk-hardening/ ← Vuln reports, hardening logs, client artifacts
-├── playbooks/                 ← SOC playbooks, IR procedures, triage guides
-├── scripts/                   ← PowerShell, automation, tooling used in lab
-└── assets/                    ← Diagrams, screenshots, supporting images
-```
 
 ## Resources
 
