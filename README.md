@@ -1,4 +1,4 @@
-# SB SECURITY FORTRESS
+# SB-SECURITY-FORTRESS
 ## Mission
 
 Build and document a business-grade IT and security infrastructure in a VMware Workstation homelab environment. Develop analyst skills across infrastructure, GRC, and SOC disciplines. Every build decision, configuration, and finding is documented as if it were a client deliverable — supporting the development of a solo security consulting practice.
