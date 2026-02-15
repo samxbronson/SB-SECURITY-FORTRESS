@@ -56,7 +56,7 @@
     z-index: 1000;
   }
 
-  /* ── HEADER ── */
+  /* ââ HEADER ââ */
   #header {
     border-bottom: 1px solid var(--border);
     padding: 28px 40px 20px;
@@ -131,10 +131,10 @@
     transition: width 0.5s ease;
   }
 
-  /* ── LAYOUT ── */
+  /* ââ LAYOUT ââ */
   #app { display: flex; min-height: calc(100vh - 110px); }
 
-  /* ── SIDEBAR ── */
+  /* ââ SIDEBAR ââ */
   #sidebar {
     width: 240px;
     min-width: 240px;
@@ -248,7 +248,7 @@
 
   .legend-label { font-size: 10px; color: var(--dim); }
 
-  /* ── MAIN ── */
+  /* ââ MAIN ââ */
   #main {
     flex: 1;
     padding: 28px 36px;
@@ -428,7 +428,7 @@
     <div>
       <div class="header-label">sb-security-fortress // VMware Workstation Pro</div>
       <div class="header-title">Infrastructure Build Tracker</div>
-      <div class="header-sub">IT Infrastructure → IAM → Detection → Risk → Hardening</div>
+      <div class="header-sub">IT Infrastructure â IAM â Detection â Risk â Hardening</div>
     </div>
     <div>
       <div class="header-progress-num" id="overall-pct">0<span>%</span></div>
@@ -446,7 +446,7 @@
       <div>
         <div style="font-size:9px; color:#4B5563; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:3px;">Simulated Client</div>
         <div style="font-size:12px; font-weight:600; color:#94A3B8; font-family:'Space Grotesk',sans-serif;">Hargrove Financial Group</div>
-        <div style="font-size:10px; color:#374151; margin-top:1px;">45-person accounting firm · On-premise Windows · No dedicated security team</div>
+        <div style="font-size:10px; color:#374151; margin-top:1px;">45-person accounting firm Â· On-premise Windows Â· No dedicated security team</div>
       </div>
       <div style="width:1px; height:32px; background:#1A2030; flex-shrink:0;"></div>
       <div>
@@ -486,39 +486,39 @@
 
 <script>
 // ============================================================
-// STATUS CONFIGURATION — EDIT HERE ONLY
+// STATUS CONFIGURATION â EDIT HERE ONLY
 // Values: "todo" | "inprogress" | "done" | "revisit"
 // ============================================================
 const STATUS = {
-  // Phase 1 — Core Infrastructure
-  "1-1": "inprogress",   // VMware Workstation Pro Setup
+  // Phase 1 â Core Infrastructure
+  "1-1": "revisit",   // VMware Workstation Pro Setup
   "1-2": "todo",   // Network Design
   "1-3": "todo",   // Windows Server 2019/2022 VM
   "1-4": "todo",   // Active Directory Domain Services
   "1-5": "todo",   // DHCP Server
   "1-6": "todo",   // Windows 10/11 Client VM
 
-  // Phase 2 — IAM & Group Policy
+  // Phase 2 â IAM & Group Policy
   "2-1": "todo",   // User Lifecycle Management
   "2-2": "todo",   // Role-Based Access Control
   "2-3": "todo",   // Group Policy Objects
   "2-4": "todo",   // Privileged Access
   "2-5": "todo",   // File Server and Permissions
 
-  // Phase 3 — Visibility & Detection
+  // Phase 3 â Visibility & Detection
   "3-1": "todo",   // Audit Policy & Windows Event Logging
   "3-2": "todo",   // Syslog / Log Forwarding
   "3-3": "todo",   // SIEM Deployment (Wazuh)
   "3-4": "todo",   // Detection Rule Writing
   "3-5": "todo",   // Simulate and Detect
 
-  // Phase 4 — Vulnerability & Risk
+  // Phase 4 â Vulnerability & Risk
   "4-1": "todo",   // Vulnerability Scanning
   "4-2": "todo",   // Finding Prioritization
   "4-3": "todo",   // Risk Register
   "4-4": "todo",   // Framework Mapping
 
-  // Phase 5 — Hardening
+  // Phase 5 â Hardening
   "5-1": "todo",   // CIS Benchmark Hardening
   "5-2": "todo",   // Network Hardening
   "5-3": "todo",   // Service and Port Hardening
@@ -529,14 +529,14 @@ const STATUS = {
 const phases = [
   {
     id: 1, title: "Core Infrastructure", subtitle: "Build the foundation everything else runs on",
-    color: "#00C2FF", accent: "#003A4D", duration: "2–4 weeks", icon: "⬡",
+    color: "#00C2FF", accent: "#003A4D", duration: "2â4 weeks", icon: "â¬¡",
     steps: [
       { id: "1-1", title: "VMware Workstation Pro Setup", docs: "Network topology, VM allocation table",
         details: ["Install VMware Workstation Pro on host machine","Plan VM allocation: RAM, disk, CPU budgets","Create Host-Only and NAT virtual networks in VMware Network Editor","Document host machine specs in your repo under /docs/infra/host.md"] },
       { id: "1-2", title: "Network Design", docs: "Network diagram, IP address scheme doc",
         details: ["Define subnet scheme: e.g. 10.0.1.0/24 for servers, 10.0.2.0/24 for clients","Plan VLAN-equivalent segments using VMware virtual switches","Draw a logical network diagram (draw.io)","Document IP assignments: static vs DHCP"] },
       { id: "1-3", title: "Windows Server 2019/2022 VM", docs: "Server build sheet: specs, OS version, patch level",
-        details: ["Install Windows Server — use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
+        details: ["Install Windows Server â use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
       { id: "1-4", title: "Active Directory Domain Services", docs: "OU structure diagram, domain design decisions",
         details: ["Promote server to Domain Controller","Create domain: hargrove.local","Configure DNS (installed with AD DS)","Create OU structure: Users, Computers, Groups, Service Accounts","Create test user accounts across different roles"] },
       { id: "1-5", title: "DHCP Server", docs: "DHCP scope config, exclusions, reservations",
@@ -547,12 +547,12 @@ const phases = [
   },
   {
     id: 2, title: "IAM & Group Policy", subtitle: "Who can access what, and how is it enforced",
-    color: "#A78BFA", accent: "#2D1F4D", duration: "2–3 weeks", icon: "◈",
+    color: "#A78BFA", accent: "#2D1F4D", duration: "2â3 weeks", icon: "â",
     steps: [
       { id: "2-1", title: "User Lifecycle Management", docs: "User lifecycle SOP, account naming convention doc",
         details: ["Create onboarding and offboarding procedures as a written doc","Practice: provision a new user, assign to groups, set expiry","Practice: disable and deprovision a departed user","Document account states: active, disabled, locked"] },
       { id: "2-2", title: "Role-Based Access Control", docs: "RBAC matrix, group structure diagram",
-        details: ["Create security groups mapped to job roles","Assign file share permissions to groups, not individual users","Test: log in as different users, verify access is correct","Document RBAC matrix: role → group → permissions"] },
+        details: ["Create security groups mapped to job roles","Assign file share permissions to groups, not individual users","Test: log in as different users, verify access is correct","Document RBAC matrix: role â group â permissions"] },
       { id: "2-3", title: "Group Policy Objects", docs: "GPO inventory, each GPO's purpose and target OU",
         details: ["Create baseline security GPO: password policy, lockout policy","Deploy a desktop restriction GPO to a test OU","Configure audit policy via GPO (logon events, privilege use, object access)","Test GPO application with gpresult /r on client"] },
       { id: "2-4", title: "Privileged Access", docs: "Privileged account inventory, service account register",
@@ -563,14 +563,14 @@ const phases = [
   },
   {
     id: 3, title: "Visibility & Detection", subtitle: "Build eyes across your environment",
-    color: "#34D399", accent: "#0D2B1F", duration: "3–4 weeks", icon: "◉",
+    color: "#34D399", accent: "#0D2B1F", duration: "3â4 weeks", icon: "â",
     steps: [
       { id: "3-1", title: "Audit Policy & Windows Event Logging", docs: "Audit policy baseline, key event ID reference sheet",
         details: ["Configure advanced audit policy via GPO","Key event IDs: 4624/4625 (logon), 4720 (user created), 4732 (group membership), 4688 (process creation)","Verify logs appearing in Event Viewer on endpoints","Document which policies are enabled and why"] },
       { id: "3-2", title: "Syslog / Log Forwarding", docs: "Log architecture diagram, forwarding config",
         details: ["Set up a Linux VM (Ubuntu Server) as your log collector","Configure Windows Event Forwarding (WEF) or install a log agent","Forward logs from Domain Controller and client to collector","Verify logs arriving at collector"] },
       { id: "3-3", title: "SIEM Deployment (Wazuh)", docs: "Wazuh deployment doc, agent enrollment steps",
-        details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules — understand what fires by default"] },
+        details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules â understand what fires by default"] },
       { id: "3-4", title: "Detection Rule Writing", docs: "Detection rule register with rationale",
         details: ["Write a rule to alert on 5+ failed logins in 60 seconds","Write a rule to alert when a new user is added to Domain Admins","Write a rule for logon outside business hours","Document each rule: what it detects, why it matters, false positive risk"] },
       { id: "3-5", title: "Simulate and Detect", docs: "Simulation runbooks, detection gap analysis",
@@ -579,30 +579,30 @@ const phases = [
   },
   {
     id: 4, title: "Vulnerability & Risk", subtitle: "Find what's exposed before an attacker does",
-    color: "#FB923C", accent: "#3D1A00", duration: "2–3 weeks", icon: "◬",
+    color: "#FB923C", accent: "#3D1A00", duration: "2â3 weeks", icon: "â¬",
     steps: [
       { id: "4-1", title: "Vulnerability Scanning", docs: "Scan methodology doc, raw findings report",
         details: ["Deploy OpenVAS or Nessus Essentials on a dedicated VM","Run an unauthenticated scan against your server subnet","Run an authenticated scan using a service account","Export findings report"] },
       { id: "4-2", title: "Finding Prioritization", docs: "Prioritized findings log, false positive register",
         details: ["Triage findings by CVSS score and exploitability","Identify which findings are critical in your specific environment","Mark false positives and document why","Create a prioritized remediation list"] },
       { id: "4-3", title: "Risk Register", docs: "Risk register (spreadsheet or markdown table)",
-        details: ["Identify key assets: DC, file server, client workstations","Map threats to each asset","Score likelihood and impact (1–5 scale)","Document existing controls and residual risk"] },
+        details: ["Identify key assets: DC, file server, client workstations","Map threats to each asset","Score likelihood and impact (1â5 scale)","Document existing controls and residual risk"] },
       { id: "4-4", title: "Framework Mapping", docs: "CIS Controls gap analysis, compliance mapping",
-        details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps — what IG1 controls do you not have","Document as a gap analysis"] },
+        details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps â what IG1 controls do you not have","Document as a gap analysis"] },
     ]
   },
   {
     id: 5, title: "Hardening", subtitle: "Close the gaps you found, then prove it",
-    color: "#F472B6", accent: "#3D0020", duration: "2–3 weeks", icon: "⬠",
+    color: "#F472B6", accent: "#3D0020", duration: "2â3 weeks", icon: "â¬ ",
     steps: [
       { id: "5-1", title: "CIS Benchmark Hardening", docs: "Hardening checklist with before/after state",
-        details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying — document issues","Re-run vulnerability scan to measure improvement"] },
+        details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying â document issues","Re-run vulnerability scan to measure improvement"] },
       { id: "5-2", title: "Network Hardening", docs: "Firewall rule baseline, segmentation rationale",
-        details: ["Review firewall rules — remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
+        details: ["Review firewall rules â remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
       { id: "5-3", title: "Service and Port Hardening", docs: "Port/service baseline, before/after scan results",
         details: ["Run a port scan against your servers (nmap from Kali VM)","Disable any services not required for the server's role","Document open ports and justify each one","Re-scan after changes to confirm ports closed"] },
       { id: "5-4", title: "Remediation Verification", docs: "Remediation report, risk acceptance register",
-        details: ["Re-run vulnerability scanner after hardening","Compare new report to original — document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
+        details: ["Re-run vulnerability scanner after hardening","Compare new report to original â document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
     ]
   }
 ];
@@ -683,7 +683,7 @@ function render() {
       <div class="phase-header-top">
         <span class="phase-header-icon" style="color:${phase.color}">${phase.icon}</span>
         <div>
-          <div class="phase-header-meta">Phase ${phase.id} · ${phase.duration}</div>
+          <div class="phase-header-meta">Phase ${phase.id} Â· ${phase.duration}</div>
           <div class="phase-header-title">${phase.title}</div>
         </div>
       </div>
@@ -701,13 +701,13 @@ function render() {
               <div class="step-number" style="border-color:${phase.color}30; color:${phase.color}">${i+1}</div>
               <div class="step-title-block">
                 <div class="step-title">${step.title}</div>
-                <div class="step-meta">${step.details.length} tasks · ${step.docs}</div>
+                <div class="step-meta">${step.details.length} tasks Â· ${step.docs}</div>
               </div>
               <div class="status-badge"
                    style="background:${sc.bg}; border-color:${sc.color}40; color:${sc.color}; cursor:default;">
                 ${sc.label}
               </div>
-              <div class="chevron ${isExpanded ? 'open' : ''}">▼</div>
+              <div class="chevron ${isExpanded ? 'open' : ''}">â¼</div>
             </div>
             <div class="step-body ${isExpanded ? 'visible' : ''}">
               <div class="step-body-inner">
@@ -715,14 +715,14 @@ function render() {
                   <div class="tasks-label">Tasks</div>
                   ${step.details.map(d => `
                     <div class="task-item">
-                      <span class="task-arrow" style="color:${phase.color}">›</span>
+                      <span class="task-arrow" style="color:${phase.color}">âº</span>
                       <span class="task-text">${d}</span>
                     </div>`).join('')}
                 </div>
                 <div>
                   <div class="doc-label">Document</div>
                   <div class="doc-box" style="background:${phase.color}10; border:1px solid ${phase.color}30; color:${phase.color}">
-                    📄 ${step.docs}
+                    ð ${step.docs}
                   </div>
                 </div>
               </div>
