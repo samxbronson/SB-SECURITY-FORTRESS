@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SB-SECURITY-FORTRESS</title>
-  <link rel="icon" type="image/png" href="assets/sb-security-favicon.jpg">
+  <link rel="icon" type="image/png" href="sb-security-favicon.jpg">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
 
@@ -56,7 +56,7 @@
     z-index: 1000;
   }
 
-  /* -- HEADER -- */
+  /* ── HEADER ── */
   #header {
     border-bottom: 1px solid var(--border);
     padding: 28px 40px 20px;
@@ -131,10 +131,10 @@
     transition: width 0.5s ease;
   }
 
-  /* -- LAYOUT -- */
+  /* ── LAYOUT ── */
   #app { display: flex; min-height: calc(100vh - 110px); }
 
-  /* -- SIDEBAR -- */
+  /* ── SIDEBAR ── */
   #sidebar {
     width: 240px;
     min-width: 240px;
@@ -248,7 +248,7 @@
 
   .legend-label { font-size: 10px; color: var(--dim); }
 
-  /* -- MAIN -- */
+  /* ── MAIN ── */
   #main {
     flex: 1;
     padding: 28px 36px;
@@ -486,43 +486,141 @@
 
 <script>
 // ============================================================
-// STATUS CONFIGURATION -- EDIT HERE ONLY
+// STATUS CONFIGURATION — MANAGED BY AGENT, DO NOT EDIT MANUALLY
+// Step statuses are derived from sub-task rollup automatically.
 // Values: "todo" | "inprogress" | "done" | "revisit"
 // ============================================================
 const STATUS = {
-  // Phase 1 -- Core Infrastructure
-  "1-1": "inprogress",   // VMware Workstation Pro Setup
-  "1-2": "todo",   // Network Design
-  "1-3": "todo",   // Windows Server 2019/2022 VM
-  "1-4": "todo",   // Active Directory Domain Services
-  "1-5": "todo",   // DHCP Server
-  "1-6": "todo",   // Windows 10/11 Client VM
+  // Phase 1 — Core Infrastructure
+  "1-1": "inprogress",   // VMware Workstation Pro Setup [DERIVED]
+  "1-1-1": "inprogress", // Install VMware Workstation Pro on host machine
+  "1-1-2": "todo",       // Plan VM allocation: RAM, disk, CPU budgets
+  "1-1-3": "todo",       // Create Host-Only and NAT virtual networks
+  "1-1-4": "todo",       // Document host machine specs in /docs/infra/host.md
+  "1-2": "todo",         // Network Design [DERIVED]
+  "1-2-1": "todo",       // Define subnet scheme
+  "1-2-2": "todo",       // Plan VLAN-equivalent segments
+  "1-2-3": "todo",       // Draw a logical network diagram
+  "1-2-4": "todo",       // Document IP assignments
+  "1-3": "todo",         // Windows Server 2019/2022 VM [DERIVED]
+  "1-3-1": "todo",       // Install Windows Server Evaluation edition
+  "1-3-2": "todo",       // Set static IP, hostname, timezone
+  "1-3-3": "todo",       // Run Windows Updates
+  "1-3-4": "todo",       // Take a VM snapshot
+  "1-4": "todo",         // Active Directory Domain Services [DERIVED]
+  "1-4-1": "todo",       // Promote server to Domain Controller
+  "1-4-2": "todo",       // Create domain: hargrove.local
+  "1-4-3": "todo",       // Configure DNS
+  "1-4-4": "todo",       // Create OU structure
+  "1-4-5": "todo",       // Create test user accounts
+  "1-5": "todo",         // DHCP Server [DERIVED]
+  "1-5-1": "todo",       // Install DHCP role on Windows Server
+  "1-5-2": "todo",       // Configure scope for client subnet
+  "1-5-3": "todo",       // Set DNS and gateway options
+  "1-5-4": "todo",       // Test with a Windows 10/11 client VM
+  "1-6": "todo",         // Windows 10/11 Client VM [DERIVED]
+  "1-6-1": "todo",       // Install Windows 10 or 11 client
+  "1-6-2": "todo",       // Join to domain
+  "1-6-3": "todo",       // Log in with a domain user account
+  "1-6-4": "todo",       // Confirm DNS resolution and DHCP lease
 
-  // Phase 2 -- IAM & Group Policy
-  "2-1": "todo",   // User Lifecycle Management
-  "2-2": "todo",   // Role-Based Access Control
-  "2-3": "todo",   // Group Policy Objects
-  "2-4": "todo",   // Privileged Access
-  "2-5": "todo",   // File Server and Permissions
+  // Phase 2 — IAM & Group Policy
+  "2-1": "todo",         // User Lifecycle Management [DERIVED]
+  "2-1-1": "todo",       // Create onboarding and offboarding procedures
+  "2-1-2": "todo",       // Practice: provision a new user
+  "2-1-3": "todo",       // Practice: disable and deprovision a departed user
+  "2-1-4": "todo",       // Document account states
+  "2-2": "todo",         // Role-Based Access Control [DERIVED]
+  "2-2-1": "todo",       // Create security groups mapped to job roles
+  "2-2-2": "todo",       // Assign file share permissions to groups
+  "2-2-3": "todo",       // Test: log in as different users
+  "2-2-4": "todo",       // Document RBAC matrix
+  "2-3": "todo",         // Group Policy Objects [DERIVED]
+  "2-3-1": "todo",       // Create baseline security GPO
+  "2-3-2": "todo",       // Deploy a desktop restriction GPO
+  "2-3-3": "todo",       // Configure audit policy via GPO
+  "2-3-4": "todo",       // Test GPO application with gpresult /r
+  "2-4": "todo",         // Privileged Access [DERIVED]
+  "2-4-1": "todo",       // Identify all privileged accounts
+  "2-4-2": "todo",       // Create a break-glass admin account
+  "2-4-3": "todo",       // Document service accounts
+  "2-4-4": "todo",       // Practice principle of least privilege
+  "2-5": "todo",         // File Server and Permissions [DERIVED]
+  "2-5-1": "todo",       // Create shared folders mapped to departments
+  "2-5-2": "todo",       // Apply NTFS permissions using security groups
+  "2-5-3": "todo",       // Enable access-based enumeration
+  "2-5-4": "todo",       // Test access as multiple users
 
-  // Phase 3 -- Visibility & Detection
-  "3-1": "todo",   // Audit Policy & Windows Event Logging
-  "3-2": "todo",   // Syslog / Log Forwarding
-  "3-3": "todo",   // SIEM Deployment (Wazuh)
-  "3-4": "todo",   // Detection Rule Writing
-  "3-5": "todo",   // Simulate and Detect
+  // Phase 3 — Visibility & Detection
+  "3-1": "todo",         // Audit Policy & Windows Event Logging [DERIVED]
+  "3-1-1": "todo",       // Configure advanced audit policy via GPO
+  "3-1-2": "todo",       // Key event IDs reference
+  "3-1-3": "todo",       // Verify logs appearing in Event Viewer
+  "3-1-4": "todo",       // Document which policies are enabled and why
+  "3-2": "todo",         // Syslog / Log Forwarding [DERIVED]
+  "3-2-1": "todo",       // Set up Ubuntu Server as log collector
+  "3-2-2": "todo",       // Configure Windows Event Forwarding
+  "3-2-3": "todo",       // Forward logs from DC and client
+  "3-2-4": "todo",       // Verify logs arriving at collector
+  "3-3": "todo",         // SIEM Deployment (Wazuh) [DERIVED]
+  "3-3-1": "todo",       // Deploy Wazuh on Ubuntu Server VM
+  "3-3-2": "todo",       // Install Wazuh agents on Windows Server and client
+  "3-3-3": "todo",       // Confirm agent connectivity in dashboard
+  "3-3-4": "todo",       // Review built-in rules
+  "3-4": "todo",         // Detection Rule Writing [DERIVED]
+  "3-4-1": "todo",       // Write rule: 5+ failed logins in 60 seconds
+  "3-4-2": "todo",       // Write rule: new user added to Domain Admins
+  "3-4-3": "todo",       // Write rule: logon outside business hours
+  "3-4-4": "todo",       // Document each rule with rationale
+  "3-5": "todo",         // Simulate and Detect [DERIVED]
+  "3-5-1": "todo",       // Simulate brute force
+  "3-5-2": "todo",       // Simulate privilege escalation
+  "3-5-3": "todo",       // Simulate recon
+  "3-5-4": "todo",       // Document detection gap analysis
 
-  // Phase 4 -- Vulnerability & Risk
-  "4-1": "todo",   // Vulnerability Scanning
-  "4-2": "todo",   // Finding Prioritization
-  "4-3": "todo",   // Risk Register
-  "4-4": "todo",   // Framework Mapping
+  // Phase 4 — Vulnerability & Risk
+  "4-1": "todo",         // Vulnerability Scanning [DERIVED]
+  "4-1-1": "todo",       // Deploy OpenVAS or Nessus Essentials
+  "4-1-2": "todo",       // Run unauthenticated scan
+  "4-1-3": "todo",       // Run authenticated scan
+  "4-1-4": "todo",       // Export findings report
+  "4-2": "todo",         // Finding Prioritization [DERIVED]
+  "4-2-1": "todo",       // Triage findings by CVSS score
+  "4-2-2": "todo",       // Identify critical findings
+  "4-2-3": "todo",       // Mark false positives
+  "4-2-4": "todo",       // Create prioritized remediation list
+  "4-3": "todo",         // Risk Register [DERIVED]
+  "4-3-1": "todo",       // Identify key assets
+  "4-3-2": "todo",       // Map threats to each asset
+  "4-3-3": "todo",       // Score likelihood and impact
+  "4-3-4": "todo",       // Document existing controls and residual risk
+  "4-4": "todo",         // Framework Mapping [DERIVED]
+  "4-4-1": "todo",       // Download CIS Controls v8
+  "4-4-2": "todo",       // Map current controls to CIS IG1
+  "4-4-3": "todo",       // Identify gaps
+  "4-4-4": "todo",       // Document as a gap analysis
 
-  // Phase 5 -- Hardening
-  "5-1": "todo",   // CIS Benchmark Hardening
-  "5-2": "todo",   // Network Hardening
-  "5-3": "todo",   // Service and Port Hardening
-  "5-4": "todo",   // Remediation Verification
+  // Phase 5 — Hardening
+  "5-1": "todo",         // CIS Benchmark Hardening [DERIVED]
+  "5-1-1": "todo",       // Download CIS Benchmark for Windows Server
+  "5-1-2": "todo",       // Apply Level 1 recommendations via GPO
+  "5-1-3": "todo",       // Test that nothing breaks
+  "5-1-4": "todo",       // Re-run vulnerability scan
+  "5-2": "todo",         // Network Hardening [DERIVED]
+  "5-2-1": "todo",       // Review firewall rules
+  "5-2-2": "todo",       // Segment SIEM/monitoring VM
+  "5-2-3": "todo",       // Disable SMBv1
+  "5-2-4": "todo",       // Restrict RDP access
+  "5-3": "todo",         // Service and Port Hardening [DERIVED]
+  "5-3-1": "todo",       // Run port scan against servers
+  "5-3-2": "todo",       // Disable unnecessary services
+  "5-3-3": "todo",       // Document open ports
+  "5-3-4": "todo",       // Re-scan after changes
+  "5-4": "todo",         // Remediation Verification [DERIVED]
+  "5-4-1": "todo",       // Re-run vulnerability scanner
+  "5-4-2": "todo",       // Compare new report to original
+  "5-4-3": "todo",       // Document accepted risks
+  "5-4-4": "todo",       // Write remediation summary
 };
 // ============================================================
 
@@ -536,7 +634,7 @@ const phases = [
       { id: "1-2", title: "Network Design", docs: "Network diagram, IP address scheme doc",
         details: ["Define subnet scheme: e.g. 10.0.1.0/24 for servers, 10.0.2.0/24 for clients","Plan VLAN-equivalent segments using VMware virtual switches","Draw a logical network diagram (draw.io)","Document IP assignments: static vs DHCP"] },
       { id: "1-3", title: "Windows Server 2019/2022 VM", docs: "Server build sheet: specs, OS version, patch level",
-        details: ["Install Windows Server -- use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
+        details: ["Install Windows Server — use Evaluation edition (free 180 days)","Set static IP, hostname, timezone","Run Windows Updates before any role installation","Take a VM snapshot before next step"] },
       { id: "1-4", title: "Active Directory Domain Services", docs: "OU structure diagram, domain design decisions",
         details: ["Promote server to Domain Controller","Create domain: hargrove.local","Configure DNS (installed with AD DS)","Create OU structure: Users, Computers, Groups, Service Accounts","Create test user accounts across different roles"] },
       { id: "1-5", title: "DHCP Server", docs: "DHCP scope config, exclusions, reservations",
@@ -570,7 +668,7 @@ const phases = [
       { id: "3-2", title: "Syslog / Log Forwarding", docs: "Log architecture diagram, forwarding config",
         details: ["Set up a Linux VM (Ubuntu Server) as your log collector","Configure Windows Event Forwarding (WEF) or install a log agent","Forward logs from Domain Controller and client to collector","Verify logs arriving at collector"] },
       { id: "3-3", title: "SIEM Deployment (Wazuh)", docs: "Wazuh deployment doc, agent enrollment steps",
-        details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules -- understand what fires by default"] },
+        details: ["Deploy Wazuh on your Ubuntu Server VM","Install Wazuh agents on Windows Server and client","Confirm agent connectivity in Wazuh dashboard","Review built-in rules — understand what fires by default"] },
       { id: "3-4", title: "Detection Rule Writing", docs: "Detection rule register with rationale",
         details: ["Write a rule to alert on 5+ failed logins in 60 seconds","Write a rule to alert when a new user is added to Domain Admins","Write a rule for logon outside business hours","Document each rule: what it detects, why it matters, false positive risk"] },
       { id: "3-5", title: "Simulate and Detect", docs: "Simulation runbooks, detection gap analysis",
@@ -588,7 +686,7 @@ const phases = [
       { id: "4-3", title: "Risk Register", docs: "Risk register (spreadsheet or markdown table)",
         details: ["Identify key assets: DC, file server, client workstations","Map threats to each asset","Score likelihood and impact (1–5 scale)","Document existing controls and residual risk"] },
       { id: "4-4", title: "Framework Mapping", docs: "CIS Controls gap analysis, compliance mapping",
-        details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps -- what IG1 controls do you not have","Document as a gap analysis"] },
+        details: ["Download the CIS Controls v8 (free PDF)","Map current controls to CIS Implementation Group 1","Identify gaps — what IG1 controls do you not have","Document as a gap analysis"] },
     ]
   },
   {
@@ -596,13 +694,13 @@ const phases = [
     color: "#F472B6", accent: "#3D0020", duration: "2–3 weeks", icon: "⬠",
     steps: [
       { id: "5-1", title: "CIS Benchmark Hardening", docs: "Hardening checklist with before/after state",
-        details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying -- document issues","Re-run vulnerability scan to measure improvement"] },
+        details: ["Download CIS Benchmark for Windows Server 2019/2022 (free with registration)","Apply Level 1 recommendations via GPO where possible","Test that nothing breaks after applying — document issues","Re-run vulnerability scan to measure improvement"] },
       { id: "5-2", title: "Network Hardening", docs: "Firewall rule baseline, segmentation rationale",
-        details: ["Review firewall rules -- remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
+        details: ["Review firewall rules — remove any allow-all rules","Segment your SIEM/monitoring VM from production VMs","Disable SMBv1 if enabled","Restrict RDP access to admin VLAN only"] },
       { id: "5-3", title: "Service and Port Hardening", docs: "Port/service baseline, before/after scan results",
         details: ["Run a port scan against your servers (nmap from Kali VM)","Disable any services not required for the server's role","Document open ports and justify each one","Re-scan after changes to confirm ports closed"] },
       { id: "5-4", title: "Remediation Verification", docs: "Remediation report, risk acceptance register",
-        details: ["Re-run vulnerability scanner after hardening","Compare new report to original -- document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
+        details: ["Re-run vulnerability scanner after hardening","Compare new report to original — document what closed","Document any accepted risks with justification","Write a remediation summary as if delivering it to a client"] },
     ]
   }
 ];
@@ -616,9 +714,36 @@ const statusConfig = {
 
 const statusOrder = ["todo","inprogress","done","revisit"];
 
-// Seed in-memory state from STATUS config
+// Seed in-memory state from STATUS config (steps + sub-tasks)
 const statuses = {};
-phases.forEach(p => p.steps.forEach(s => statuses[s.id] = STATUS[s.id] || "todo"));
+phases.forEach(p => p.steps.forEach((s, si) => {
+  // Seed sub-task statuses: 1-1-1, 1-1-2, etc.
+  s.details.forEach((d, di) => {
+    const subId = `${s.id}-${di + 1}`;
+    statuses[subId] = STATUS[subId] || "todo";
+  });
+  // Derive step status from sub-tasks (rollup)
+  statuses[s.id] = deriveStepStatus(s);
+}));
+
+// Rollup: derive step status from its sub-tasks
+function deriveStepStatus(step) {
+  const subStatuses = step.details.map((d, di) => statuses[`${step.id}-${di + 1}`] || "todo");
+  if (subStatuses.length === 0) return STATUS[step.id] || "todo";
+  if (subStatuses.every(s => s === "done"))       return "done";
+  if (subStatuses.some(s => s === "revisit"))     return "revisit";
+  if (subStatuses.some(s => s === "inprogress" || s === "done")) return "inprogress";
+  return "todo";
+}
+
+// Update a sub-task status and re-derive its parent step
+function setSubTaskStatus(stepId, subIndex, newStatus) {
+  const subId = `${stepId}-${subIndex}`;
+  statuses[subId] = newStatus;
+  // Re-derive parent step
+  const step = phases.flatMap(p => p.steps).find(s => s.id === stepId);
+  if (step) statuses[stepId] = deriveStepStatus(step);
+}
 
 let activePhase = 1;
 const expandedSteps = new Set();
@@ -700,7 +825,7 @@ function render() {
             <div class="step-header" onclick="toggleStep('${step.id}')">
               <div class="step-number" style="border-color:${phase.color}30; color:${phase.color}">${i+1}</div>
               <div class="step-title-block">
-                <div class="step-title">${step.title}</div>
+                <div class="step-title" style="${status === 'done' ? 'text-decoration:line-through;opacity:0.45;' : ''}">${step.title}</div>
                 <div class="step-meta">${step.details.length} tasks · ${step.docs}</div>
               </div>
               <div class="status-badge"
@@ -713,11 +838,27 @@ function render() {
               <div class="step-body-inner">
                 <div>
                   <div class="tasks-label">Tasks</div>
-                  ${step.details.map(d => `
+                  ${step.details.map((d, di) => {
+                    const subId = `${step.id}-${di + 1}`;
+                    const subStatus = statuses[subId] || "todo";
+                    const subSc = statusConfig[subStatus];
+                    const isDone = subStatus === "done";
+                    const isRevisit = subStatus === "revisit";
+                    const isProgress = subStatus === "inprogress";
+                    const textStyle = isDone
+                      ? "text-decoration:line-through;opacity:0.35;"
+                      : isRevisit ? "color:#F87171;" : "";
+                    const arrowColor = isDone ? "#374151"
+                      : isRevisit ? "#F87171"
+                      : isProgress ? "#FBBF24"
+                      : phase.color;
+                    return `
                     <div class="task-item">
-                      <span class="task-arrow" style="color:${phase.color}">›</span>
-                      <span class="task-text">${d}</span>
-                    </div>`).join('')}
+                      <span class="task-arrow" style="color:${arrowColor}">›</span>
+                      <span class="task-text" style="${textStyle}">${d}</span>
+                      <span style="margin-left:auto;font-size:9px;letter-spacing:0.08em;color:${subSc.color};flex-shrink:0;padding-left:8px;">${isDone ? "✓" : isRevisit ? "↺" : isProgress ? "▶" : ""}</span>
+                    </div>`;
+                  }).join('')}
                 </div>
                 <div>
                   <div class="doc-label">Document</div>
