@@ -84,6 +84,19 @@
     margin-bottom: 6px;
   }
 
+  .header-label a {
+    color: var(--p1);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,194,255,0.35);
+    padding-bottom: 1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .header-label a:hover {
+    color: #7DE8FF;
+    border-bottom-color: rgba(125,232,255,0.65);
+  }
+
   .header-title {
     font-size: 22px;
     font-weight: 700;
@@ -485,144 +498,129 @@
 </div>
 
 <script>
-// ============================================================
-// STATUS CONFIGURATION — MANAGED BY AGENT, DO NOT EDIT MANUALLY
-// Step statuses are derived from sub-task rollup automatically.
-// Values: "todo" | "inprogress" | "done" | "revisit"
-// ============================================================
 const STATUS = {
-  // Phase 1 — Core Infrastructure
-  "1-1": "inprogress",   // VMware Workstation Pro Setup [DERIVED]
-  "1-1-1": "inprogress", // Install VMware Workstation Pro on host machine
-  "1-1-2": "todo",       // Plan VM allocation: RAM, disk, CPU budgets
-  "1-1-3": "todo",       // Create Host-Only and NAT virtual networks
-  "1-1-4": "todo",       // Document host machine specs in /docs/infra/host.md
-  "1-2": "todo",         // Network Design [DERIVED]
-  "1-2-1": "todo",       // Define subnet scheme
-  "1-2-2": "todo",       // Plan VLAN-equivalent segments
-  "1-2-3": "todo",       // Draw a logical network diagram
-  "1-2-4": "todo",       // Document IP assignments
-  "1-3": "todo",         // Windows Server 2019/2022 VM [DERIVED]
-  "1-3-1": "todo",       // Install Windows Server Evaluation edition
-  "1-3-2": "todo",       // Set static IP, hostname, timezone
-  "1-3-3": "todo",       // Run Windows Updates
-  "1-3-4": "todo",       // Take a VM snapshot
-  "1-4": "todo",         // Active Directory Domain Services [DERIVED]
-  "1-4-1": "todo",       // Promote server to Domain Controller
-  "1-4-2": "todo",       // Create domain: hargrove.local
-  "1-4-3": "todo",       // Configure DNS
-  "1-4-4": "todo",       // Create OU structure
-  "1-4-5": "todo",       // Create test user accounts
-  "1-5": "todo",         // DHCP Server [DERIVED]
-  "1-5-1": "todo",       // Install DHCP role on Windows Server
-  "1-5-2": "todo",       // Configure scope for client subnet
-  "1-5-3": "todo",       // Set DNS and gateway options
-  "1-5-4": "todo",       // Test with a Windows 10/11 client VM
-  "1-6": "todo",         // Windows 10/11 Client VM [DERIVED]
-  "1-6-1": "todo",       // Install Windows 10 or 11 client
-  "1-6-2": "todo",       // Join to domain
-  "1-6-3": "todo",       // Log in with a domain user account
-  "1-6-4": "todo",       // Confirm DNS resolution and DHCP lease
-
-  // Phase 2 — IAM & Group Policy
-  "2-1": "todo",         // User Lifecycle Management [DERIVED]
-  "2-1-1": "todo",       // Create onboarding and offboarding procedures
-  "2-1-2": "todo",       // Practice: provision a new user
-  "2-1-3": "todo",       // Practice: disable and deprovision a departed user
-  "2-1-4": "todo",       // Document account states
-  "2-2": "todo",         // Role-Based Access Control [DERIVED]
-  "2-2-1": "todo",       // Create security groups mapped to job roles
-  "2-2-2": "todo",       // Assign file share permissions to groups
-  "2-2-3": "todo",       // Test: log in as different users
-  "2-2-4": "todo",       // Document RBAC matrix
-  "2-3": "todo",         // Group Policy Objects [DERIVED]
-  "2-3-1": "todo",       // Create baseline security GPO
-  "2-3-2": "todo",       // Deploy a desktop restriction GPO
-  "2-3-3": "todo",       // Configure audit policy via GPO
-  "2-3-4": "todo",       // Test GPO application with gpresult /r
-  "2-4": "todo",         // Privileged Access [DERIVED]
-  "2-4-1": "todo",       // Identify all privileged accounts
-  "2-4-2": "todo",       // Create a break-glass admin account
-  "2-4-3": "todo",       // Document service accounts
-  "2-4-4": "todo",       // Practice principle of least privilege
-  "2-5": "todo",         // File Server and Permissions [DERIVED]
-  "2-5-1": "todo",       // Create shared folders mapped to departments
-  "2-5-2": "todo",       // Apply NTFS permissions using security groups
-  "2-5-3": "todo",       // Enable access-based enumeration
-  "2-5-4": "todo",       // Test access as multiple users
-
-  // Phase 3 — Visibility & Detection
-  "3-1": "todo",         // Audit Policy & Windows Event Logging [DERIVED]
-  "3-1-1": "todo",       // Configure advanced audit policy via GPO
-  "3-1-2": "todo",       // Key event IDs reference
-  "3-1-3": "todo",       // Verify logs appearing in Event Viewer
-  "3-1-4": "todo",       // Document which policies are enabled and why
-  "3-2": "todo",         // Syslog / Log Forwarding [DERIVED]
-  "3-2-1": "todo",       // Set up Ubuntu Server as log collector
-  "3-2-2": "todo",       // Configure Windows Event Forwarding
-  "3-2-3": "todo",       // Forward logs from DC and client
-  "3-2-4": "todo",       // Verify logs arriving at collector
-  "3-3": "todo",         // SIEM Deployment (Wazuh) [DERIVED]
-  "3-3-1": "todo",       // Deploy Wazuh on Ubuntu Server VM
-  "3-3-2": "todo",       // Install Wazuh agents on Windows Server and client
-  "3-3-3": "todo",       // Confirm agent connectivity in dashboard
-  "3-3-4": "todo",       // Review built-in rules
-  "3-4": "todo",         // Detection Rule Writing [DERIVED]
-  "3-4-1": "todo",       // Write rule: 5+ failed logins in 60 seconds
-  "3-4-2": "todo",       // Write rule: new user added to Domain Admins
-  "3-4-3": "todo",       // Write rule: logon outside business hours
-  "3-4-4": "todo",       // Document each rule with rationale
-  "3-5": "todo",         // Simulate and Detect [DERIVED]
-  "3-5-1": "todo",       // Simulate brute force
-  "3-5-2": "todo",       // Simulate privilege escalation
-  "3-5-3": "todo",       // Simulate recon
-  "3-5-4": "todo",       // Document detection gap analysis
-
-  // Phase 4 — Vulnerability & Risk
-  "4-1": "todo",         // Vulnerability Scanning [DERIVED]
-  "4-1-1": "todo",       // Deploy OpenVAS or Nessus Essentials
-  "4-1-2": "todo",       // Run unauthenticated scan
-  "4-1-3": "todo",       // Run authenticated scan
-  "4-1-4": "todo",       // Export findings report
-  "4-2": "todo",         // Finding Prioritization [DERIVED]
-  "4-2-1": "todo",       // Triage findings by CVSS score
-  "4-2-2": "todo",       // Identify critical findings
-  "4-2-3": "todo",       // Mark false positives
-  "4-2-4": "todo",       // Create prioritized remediation list
-  "4-3": "todo",         // Risk Register [DERIVED]
-  "4-3-1": "todo",       // Identify key assets
-  "4-3-2": "todo",       // Map threats to each asset
-  "4-3-3": "todo",       // Score likelihood and impact
-  "4-3-4": "todo",       // Document existing controls and residual risk
-  "4-4": "todo",         // Framework Mapping [DERIVED]
-  "4-4-1": "todo",       // Download CIS Controls v8
-  "4-4-2": "todo",       // Map current controls to CIS IG1
-  "4-4-3": "todo",       // Identify gaps
-  "4-4-4": "todo",       // Document as a gap analysis
-
-  // Phase 5 — Hardening
-  "5-1": "todo",         // CIS Benchmark Hardening [DERIVED]
-  "5-1-1": "todo",       // Download CIS Benchmark for Windows Server
-  "5-1-2": "todo",       // Apply Level 1 recommendations via GPO
-  "5-1-3": "todo",       // Test that nothing breaks
-  "5-1-4": "todo",       // Re-run vulnerability scan
-  "5-2": "todo",         // Network Hardening [DERIVED]
-  "5-2-1": "todo",       // Review firewall rules
-  "5-2-2": "todo",       // Segment SIEM/monitoring VM
-  "5-2-3": "todo",       // Disable SMBv1
-  "5-2-4": "todo",       // Restrict RDP access
-  "5-3": "todo",         // Service and Port Hardening [DERIVED]
-  "5-3-1": "todo",       // Run port scan against servers
-  "5-3-2": "todo",       // Disable unnecessary services
-  "5-3-3": "todo",       // Document open ports
-  "5-3-4": "todo",       // Re-scan after changes
-  "5-4": "todo",         // Remediation Verification [DERIVED]
-  "5-4-1": "todo",       // Re-run vulnerability scanner
-  "5-4-2": "todo",       // Compare new report to original
-  "5-4-3": "todo",       // Document accepted risks
-  "5-4-4": "todo",       // Write remediation summary
+  "1-1": "inprogress",
+  "1-1-1": "inprogress",
+  "1-1-2": "todo",
+  "1-1-3": "todo",
+  "1-1-4": "todo",
+  "1-2": "todo",
+  "1-2-1": "todo",
+  "1-2-2": "todo",
+  "1-2-3": "todo",
+  "1-2-4": "todo",
+  "1-3": "todo",
+  "1-3-1": "todo",
+  "1-3-2": "todo",
+  "1-3-3": "todo",
+  "1-3-4": "todo",
+  "1-4": "todo",
+  "1-4-1": "todo",
+  "1-4-2": "todo",
+  "1-4-3": "todo",
+  "1-4-4": "todo",
+  "1-4-5": "todo",
+  "1-5": "todo",
+  "1-5-1": "todo",
+  "1-5-2": "todo",
+  "1-5-3": "todo",
+  "1-5-4": "todo",
+  "1-6": "todo",
+  "1-6-1": "todo",
+  "1-6-2": "todo",
+  "1-6-3": "todo",
+  "1-6-4": "todo",
+  "2-1": "todo",
+  "2-1-1": "todo",
+  "2-1-2": "todo",
+  "2-1-3": "todo",
+  "2-1-4": "todo",
+  "2-2": "todo",
+  "2-2-1": "todo",
+  "2-2-2": "todo",
+  "2-2-3": "todo",
+  "2-2-4": "todo",
+  "2-3": "todo",
+  "2-3-1": "todo",
+  "2-3-2": "todo",
+  "2-3-3": "todo",
+  "2-3-4": "todo",
+  "2-4": "todo",
+  "2-4-1": "todo",
+  "2-4-2": "todo",
+  "2-4-3": "todo",
+  "2-4-4": "todo",
+  "2-5": "todo",
+  "2-5-1": "todo",
+  "2-5-2": "todo",
+  "2-5-3": "todo",
+  "2-5-4": "todo",
+  "3-1": "todo",
+  "3-1-1": "todo",
+  "3-1-2": "todo",
+  "3-1-3": "todo",
+  "3-1-4": "todo",
+  "3-2": "todo",
+  "3-2-1": "todo",
+  "3-2-2": "todo",
+  "3-2-3": "todo",
+  "3-2-4": "todo",
+  "3-3": "todo",
+  "3-3-1": "todo",
+  "3-3-2": "todo",
+  "3-3-3": "todo",
+  "3-3-4": "todo",
+  "3-4": "todo",
+  "3-4-1": "todo",
+  "3-4-2": "todo",
+  "3-4-3": "todo",
+  "3-4-4": "todo",
+  "3-5": "todo",
+  "3-5-1": "todo",
+  "3-5-2": "todo",
+  "3-5-3": "todo",
+  "3-5-4": "todo",
+  "4-1": "todo",
+  "4-1-1": "todo",
+  "4-1-2": "todo",
+  "4-1-3": "todo",
+  "4-1-4": "todo",
+  "4-2": "todo",
+  "4-2-1": "todo",
+  "4-2-2": "todo",
+  "4-2-3": "todo",
+  "4-2-4": "todo",
+  "4-3": "todo",
+  "4-3-1": "todo",
+  "4-3-2": "todo",
+  "4-3-3": "todo",
+  "4-3-4": "todo",
+  "4-4": "todo",
+  "4-4-1": "todo",
+  "4-4-2": "todo",
+  "4-4-3": "todo",
+  "4-4-4": "todo",
+  "5-1": "todo",
+  "5-1-1": "todo",
+  "5-1-2": "todo",
+  "5-1-3": "todo",
+  "5-1-4": "todo",
+  "5-2": "todo",
+  "5-2-1": "todo",
+  "5-2-2": "todo",
+  "5-2-3": "todo",
+  "5-2-4": "todo",
+  "5-3": "todo",
+  "5-3-1": "todo",
+  "5-3-2": "todo",
+  "5-3-3": "todo",
+  "5-3-4": "todo",
+  "5-4": "todo",
+  "5-4-1": "todo",
+  "5-4-2": "todo",
+  "5-4-3": "todo",
+  "5-4-4": "todo",
 };
-// ============================================================
 
 const phases = [
   {
@@ -714,19 +712,15 @@ const statusConfig = {
 
 const statusOrder = ["todo","inprogress","done","revisit"];
 
-// Seed in-memory state from STATUS config (steps + sub-tasks)
 const statuses = {};
 phases.forEach(p => p.steps.forEach((s, si) => {
-  // Seed sub-task statuses: 1-1-1, 1-1-2, etc.
   s.details.forEach((d, di) => {
     const subId = `${s.id}-${di + 1}`;
     statuses[subId] = STATUS[subId] || "todo";
   });
-  // Derive step status from sub-tasks (rollup)
   statuses[s.id] = deriveStepStatus(s);
 }));
 
-// Rollup: derive step status from its sub-tasks
 function deriveStepStatus(step) {
   const subStatuses = step.details.map((d, di) => statuses[`${step.id}-${di + 1}`] || "todo");
   if (subStatuses.length === 0) return STATUS[step.id] || "todo";
@@ -736,11 +730,9 @@ function deriveStepStatus(step) {
   return "todo";
 }
 
-// Update a sub-task status and re-derive its parent step
 function setSubTaskStatus(stepId, subIndex, newStatus) {
   const subId = `${stepId}-${subIndex}`;
   statuses[subId] = newStatus;
-  // Re-derive parent step
   const step = phases.flatMap(p => p.steps).find(s => s.id === stepId);
   if (step) statuses[stepId] = deriveStepStatus(step);
 }
@@ -773,7 +765,6 @@ function render() {
   document.getElementById('overall-label').textContent = `${done} of ${total} steps complete`;
   document.getElementById('overall-bar').style.width = `${pct}%`;
 
-  // Sidebar nav
   const nav = document.getElementById('phase-nav');
   nav.innerHTML = phases.map(p => {
     const pp = phasePct(p);
@@ -799,7 +790,6 @@ function render() {
       </div>`;
   }).join('');
 
-  // Main content
   const phase = phases.find(p => p.id === activePhase);
   const main = document.getElementById('main');
 
