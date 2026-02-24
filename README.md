@@ -7,20 +7,18 @@ Build and document a business-grade IT and security infrastructure in a VMware W
 
 ```
 /
-├── README.md                  ← This file. Project direction and checklist.
-├── index.html                 ← Project roadmap webpage
+├── README.md
+├── index.html
 ├── docs/
-│   ├── network/               ← Network diagrams, topology, IP scheme
-│   ├── systems/               ← VM build sheets, OS configs, audit policies
-│   ├── iam/                   ← OU structure, GPOs, privileged accounts, service accounts
-│   └── grc/                   ← Risk register, compliance mapping, policies
-├── phases/
-│   ├── phase1-infrastructure/ ← Build notes, decisions, AD design
-│   ├── phase2-detection/      ← SIEM setup, detection engineering notes
-│   └── phase3-risk-hardening/ ← Vuln reports, hardening logs, client artifacts
-├── playbooks/                 ← SOC playbooks, IR procedures, triage guides
-├── scripts/                   ← PowerShell, automation, tooling used in lab
-└── assets/                    ← Diagrams, screenshots, supporting images
+│   ├── phase1-infrastructure/    ← All Phase 1 docs (network, systems, VMs)
+│   ├── phase2-iam/               ← All Phase 2 docs (OU, GPO, RBAC)
+│   ├── phase3-detection/         ← All Phase 3 docs (SIEM, rules, logs)
+│   ├── phase4-risk/              ← All Phase 4 docs (vuln scans, risk register)
+│   ├── phase5-hardening/         ← All Phase 5 docs (remediation, baselines)
+│   └── grc/                      ← Cross-cutting: policies, compliance mappings
+├── playbooks/                    ← IR procedures, SOC runbooks
+├── scripts/                      ← PowerShell, automation
+└── assets/                       ← Diagrams, screenshots
 ```
 
 ---
