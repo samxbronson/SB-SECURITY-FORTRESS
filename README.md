@@ -7,8 +7,8 @@ Build and document a business-grade IT and security infrastructure in a VMware W
 
 ```
 /
-├── README.md
-├── index.html
+├── README.md                     ← This file
+├── index.html                    ← Project roadmap webpage
 ├── docs/
 │   ├── phase1-infrastructure/    ← All Phase 1 docs (network, systems, VMs)
 │   ├── phase2-iam/               ← All Phase 2 docs (OU, GPO, RBAC)
